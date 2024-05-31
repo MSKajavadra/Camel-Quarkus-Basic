@@ -1,47 +1,43 @@
 package org.acme.route;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
 import org.apache.camel.builder.RouteBuilder;
-
-@Singleton
-public class CustomerRoute extends RouteBuilder {
-    @Override
-    public void configure() throws Exception {
-//        from("direct:registerCustomer")
-//                .to("bean:customerService?method=registerCustomer")
-//                .log("Customer registered successfully");
-
-
-//        from("timer:myTimer?period=5000")
-//                .setBody(simple("Good Morning!"))
-//                .bean("beanExample", "method")
-//                .to("log:Timer triggered. Fetching customer data...");
-
-
-//        from("timer:myTimer?period=5000")
-//                .setBody(simple("Good Morning!"))
-//                .to("direct:processMessage");
-//        from("direct:processMessage")
-//                .bean("beanExample", "process")
-//                .to("log:Processed Message");
-
-
-//        from("file://F:\\Quarkus\\input")
-//                .log("${body}")
-//                .to("file:F:\\Quarkus\\output");
-
-    }
-}
+import org.acme.service.CustomerService;
+import org.acme.entity.Customer;
 
 @ApplicationScoped
-@Named("beanExample")
-class BeanExample{
-    public String method(String body){
-        return body + " - Processed by BeanExample.method";
-    }
-    public String process(String body){
-        return body + " - Processed by BeanExample.process";
+@Api(value = "Customer API", produces = "application/json")
+public class CustomerRoute extends RouteBuilder {
+
+    @Inject
+    CustomerService customerService;
+
+    @Override
+    public void configure() throws Exception {
+        restConfiguration().contextPath("/api").port(8080);
+
+        rest("/customers")
+                .post().type(Customer.class).consumes("application/json").produces("application/json").to("direct:registerCustomer")
+                .get("/{id}").produces("application/json").to("direct:getCustomerById");
+
+        from("direct:registerCustomer")
+                .setProperty("customerId", header("id"))
+                .bean(customerService, "registerCustomer")
+                .setBody(constant("Customer registered successfully"))
+                .setHeader("Content-Type", constant("application/json"));
+
+        from("direct:getCustomerById")
+                .bean(customerService, "getCustomerById(${header.id})")
+                .choice()
+                .when(body().isNull())
+                .setHeader("Content-Type", constant("application/json"))
+                .setBody(constant("{ \"message\": \"Customer not found for order ID: ${header.id}\" }"))
+                .setHeader("CamelHttpResponseCode", constant(404))
+                .otherwise()
+                .setHeader("Content-Type", constant("application/json"));
     }
 }
