@@ -1,3 +1,5 @@
+package org.acme.route;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import jakarta.inject.Inject;
@@ -14,9 +16,6 @@ public class OrderRoute extends RouteBuilder {
 
     @Inject
     OrderService orderService;
-
-    // Jackson ObjectMapper for JSON marshalling
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void configure() throws Exception {
