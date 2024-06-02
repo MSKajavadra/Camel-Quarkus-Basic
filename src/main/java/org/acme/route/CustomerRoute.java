@@ -1,11 +1,6 @@
 package org.acme.route;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
 import org.apache.camel.builder.RouteBuilder;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -47,17 +42,5 @@ public class CustomerRoute extends RouteBuilder {
                 .description("Get customer by ID") // Add description for Swagger documentation
                 .to("direct:getCustomerById"); // Add Swagger annotation for operation
     }
-
-    @ApiOperation(value = "Register a new customer", produces = "application/json")
-    public void registerCustomer() {
-        // This method is just for Swagger documentation purposes
-    }
-
-    @Path("/abc")
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Get customer by ID", produces = "application/json")
-    public void getCustomerById() {
-        // This method is just for Swagger documentation purposes
-    }
 }
+
