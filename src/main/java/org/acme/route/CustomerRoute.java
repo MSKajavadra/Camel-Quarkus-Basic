@@ -30,17 +30,13 @@ public class CustomerRoute extends RouteBuilder {
                 .marshal().json()
                 .setHeader("Content-Type", constant("application/json"))
                 .routeId("RegisterCustomerRoute") // Add a route ID for better Swagger documentation
-                .description("Register a new customer") // Add description for Swagger documentation
-                .to("direct:registerCustomer"); // Add Swagger annotation for operation
-
+                .description("Register a new customer"); // Add description for Swagger documentation
 
         from("direct:getCustomerById")
                 .bean(customerService, "getCustomerById(${header.id})")
                 .marshal().json()
                 .setHeader("Content-Type", constant("application/json"))
                 .routeId("GetCustomerByIdRoute") // Add a route ID for better Swagger documentation
-                .description("Get customer by ID") // Add description for Swagger documentation
-                .to("direct:getCustomerById"); // Add Swagger annotation for operation
+                .description("Get customer by ID"); // Add description for Swagger documentation
     }
 }
-
