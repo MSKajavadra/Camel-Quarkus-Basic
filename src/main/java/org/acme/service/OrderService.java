@@ -22,6 +22,7 @@ public class OrderService {
         orderRepository.persist(order);
     }
 
+    @Transactional
     public List<CustomerOrder> getOrderHistory(Long customerId) {
         return orderRepository.find("customerId", customerId).list();
     }
