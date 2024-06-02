@@ -1,11 +1,14 @@
 package org.acme.route;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import jakarta.inject.Inject;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.acme.service.InventoryService;
 import org.apache.camel.builder.RouteBuilder;
 
 @ApplicationScoped
+@Api(value = "Inventory API", produces = "application/json")
 public class InventoryRoute extends RouteBuilder {
 
     @Inject
@@ -16,7 +19,8 @@ public class InventoryRoute extends RouteBuilder {
         restConfiguration().contextPath("/api").port(8080);
 
         rest("/inventory")
-                .put("/{storeId}/{productId}").to("direct:updateInventory");
+                .put("/{storeId}/{productId}")
+                .to("direct:updateInventory");
 
         from("direct:updateInventory")
                 .process(exchange -> {
@@ -27,6 +31,8 @@ public class InventoryRoute extends RouteBuilder {
                 })
                 .setBody(constant(""))
                 .setHeader("Content-Type", constant("application/json"))
-                .setHeader("CamelHttpResponseCode", constant(200));
+                .setHeader("CamelHttpResponseCode", constant(200))
+                .routeId("UpdateInventoryRoute")
+                .description("Update inventory for a given store and product");
     }
 }

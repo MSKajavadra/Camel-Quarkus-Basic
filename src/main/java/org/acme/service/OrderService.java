@@ -3,7 +3,7 @@ package org.acme.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.acme.entity.Order;
+import org.acme.entity.CustomerOrder;
 import org.acme.repository.OrderRepo;
 
 import java.time.LocalDateTime;
@@ -16,13 +16,13 @@ public class OrderService {
     OrderRepo orderRepository;
 
     @Transactional
-    public void placeOrder(Order order) {
+    public void placeOrder(CustomerOrder order) {
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("Pending"); // Set initial status
         orderRepository.persist(order);
     }
 
-    public List<Order> getOrderHistory(Long customerId) {
+    public List<CustomerOrder> getOrderHistory(Long customerId) {
         return orderRepository.find("customerId", customerId).list();
     }
 

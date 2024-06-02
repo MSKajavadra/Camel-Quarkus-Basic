@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class Order {
+public class CustomerOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,10 +18,10 @@ public class Order {
     private LocalDateTime orderDate;
     private String status;
 
-    public Order() {
+    public CustomerOrder() {
     }
 
-    public Order(Long id, Long customerId, Long productId, int quantity, LocalDateTime orderDate, String status) {
+    public CustomerOrder(Long id, Long customerId, Long productId, int quantity, LocalDateTime orderDate, String status) {
         this.id = id;
         this.customerId = customerId;
         this.productId = productId;
